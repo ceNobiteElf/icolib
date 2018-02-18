@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<schema targetNamespace="http://www.cenobiteelf.com/ns/icolib"
+		   xmlns="http://www.w3.org/2001/XMLSchema" 
+		   xmlns:il="http://www.cenobiteelf.com/ns/icolib"
+		   elementFormDefault="qualified">
+	
+	<simpleType name="pattern">
+		<restriction base="string">
+			<length value="256" />
+		</restriction>
+	</simpleType>
+
+	<complexType name="item">
+		<sequence>
+			<element name="width" type="positiveInteger" />
+			<element name="height" type="positiveInteger" />
+		</sequence>
+		
+		<attribute name="namingPattern" type="il:pattern" use="optional"/>
+	</complexType>
+	
+	<element name="template">
+		<complexType>
+			<sequence>
+				<element name="items">
+					<complexType>
+						<sequence>
+							<element name="item" type="il:item" minOccurs="0" maxOccurs="unbounded" />
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+
+			<attribute name="name" type="string" use="optional"/>
+			<attribute name="outputDirectory" type="string" use="optional"/>
+			<attribute name="fallbackNamingPattern" type="il:pattern" use="required"/>
+		</complexType>
+	</element>
+</schema>
