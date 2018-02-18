@@ -42,7 +42,7 @@ namespace Icolib
 
 
         #region Constants
-        public const string SchemaNamespace = "http://www.cenobiteelf.com/ns/icolib";
+        public const string SCHEMA_NAMESPACE = "http://www.cenobiteelf.com/ns/icolib";
         #endregion
 
 
@@ -78,7 +78,7 @@ namespace Icolib
         #region Public API
         public static ExportTemplate LoadFromFile(string templatePath)
         {
-            XmlSerializer serialiser = new XmlSerializer(typeof(ExportTemplate), SchemaNamespace);
+            XmlSerializer serialiser = new XmlSerializer(typeof(ExportTemplate), SCHEMA_NAMESPACE);
 
             using (XmlReader reader = XmlReader.Create(templatePath))
             {
@@ -97,7 +97,7 @@ namespace Icolib
 
         public static void SaveToFile(string templatePath, ExportTemplate template)
         {
-            XmlSerializer serialiser = new XmlSerializer(typeof(ExportTemplate), SchemaNamespace);
+            XmlSerializer serialiser = new XmlSerializer(typeof(ExportTemplate), SCHEMA_NAMESPACE);
 
             new FileInfo(templatePath).Directory.Create();
 

@@ -7,8 +7,9 @@ namespace Icolib.CLI
     class Program
     {
         #region Constants
-        private const string GenerateTemplates = "gen_templates";
-        private const string Quit = "quit";
+        private const string GENERATE_TEMPLATES = "gen_templates";
+        private const string GENERATE_ICONS = "gen_icons";
+        private const string QUIT = "quit";
         #endregion
 
 
@@ -25,15 +26,19 @@ namespace Icolib.CLI
 
                 command = input[0].ToLowerInvariant();
 
-                if (command == Quit)
+                if (command == QUIT)
                 {
                     break;
                 }
 
                 switch (command)
                 {
-                    case GenerateTemplates:
+                    case GENERATE_TEMPLATES:
                         GenerateDefaultTemplates();
+                        break;
+
+                    case GENERATE_ICONS:
+                        GenerateIconSet(input[1], input[2]);
                         break;
 
                     default:
@@ -95,6 +100,14 @@ namespace Icolib.CLI
 
             androidTemplate.Save();
         }
+
+        static void GenerateIconSet(string imagePath, string templateName)
+        {
+            var template = ExportTemplate.LoadFromFile(Path.Combine("Templates", $"{templateName}.xml"));
+            var exporter = new IconExporter(template);
+
+            exporter.ExportIcons(imagePath, "Output");
+        }
         #endregion
 
 
@@ -102,8 +115,9 @@ namespace Icolib.CLI
         static void Menu()
         {
             Console.WriteLine("Please enter a command");
-            Console.WriteLine($" {GenerateTemplates}");
-            Console.WriteLine($" {Quit}");
+            Console.WriteLine($" {GENERATE_TEMPLATES}");
+            Console.WriteLine($" {GENERATE_ICONS}");
+            Console.WriteLine($" {QUIT}");
             Console.WriteLine();
         }
         #endregion
