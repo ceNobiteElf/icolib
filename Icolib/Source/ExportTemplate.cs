@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
 namespace Icolib
 {
     [XmlRoot("template")]
-    public class ExportTemplate : IEnumerable<ExportTemplate.Item>
+    public class ExportTemplate
     {
         #region Internal Types
         [XmlType("item")]
@@ -18,14 +17,17 @@ namespace Icolib
             [XmlAttribute("namingPattern")]
             public string NamingPattern { get; set; }
 
-            [XmlElement("Width")]
+            [XmlElement("width")]
             public int Width { get; set; }
 
             [XmlElement("height")]
             public int Height { get; set; }
 
 
-            public Item(int sideLength = 1, string namingPattern = null)
+            public Item()
+                : this(1) { }
+
+            public Item(int sideLength, string namingPattern = null)
                 : this(sideLength, sideLength, namingPattern) { }
 
             public Item(int width, int height, string namingPattern = null)
@@ -55,7 +57,7 @@ namespace Icolib
         public string FallbackNamingPattern { get; set; }
 
         [XmlArray("items")]
-        public IList<Item> Items { get; set; } = new List<Item>();
+        public List<Item> Items { get; set; } = new List<Item>();
 
         [XmlIgnore]
         public string FilePath { get; set; }
@@ -63,7 +65,10 @@ namespace Icolib
 
 
         #region Constructors
-        public ExportTemplate(string filePath = null)
+        public ExportTemplate()
+            : this(null) { }
+
+        public ExportTemplate(string filePath)
         {
             FilePath = filePath;
         }
@@ -79,7 +84,7 @@ namespace Icolib
             {
                 if (serialiser.CanDeserialize(reader))
                 {
-                    var template = serialiser.Deserialize(reader, Encoding.UTF8.WebName) as ExportTemplate;
+                    var template = serialiser.Deserialize(reader) as ExportTemplate;
                     template.FilePath = templatePath;
                     return template;
                 }
@@ -94,20 +99,22 @@ namespace Icolib
         {
             XmlSerializer serialiser = new XmlSerializer(typeof(ExportTemplate), SchemaNamespace);
 
-            using (XmlWriter writer = XmlWriter.Create(templatePath))
+            new FileInfo(templatePath).Directory.Create();
+
+            using (XmlWriter writer = XmlWriter.Create(templatePath, new XmlWriterSettings() { Indent = true }))
             {
-                serialiser.Serialize(writer, template, null, Encoding.UTF8.WebName);
+                serialiser.Serialize(writer, template);
             }
         }
 
         public void Save()
         {
-            if (!string.IsNullOrWhiteSpace(FilePath))
+            if (string.IsNullOrWhiteSpace(FilePath))
             {
-                SaveToFile(FilePath, this);
+                throw new Exception("Cannot save template as no valid file path was specified.");
             }
 
-            throw new Exception("Cannot save template as no valid file path was specified.");
+            SaveToFile(FilePath, this);
         }
 
         public string GetItemName(Item item)
@@ -126,9 +133,6 @@ namespace Icolib
 
         #region Interface Implementation
         public IEnumerator<Item> GetEnumerator()
-            => Items.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator()
             => Items.GetEnumerator();
         #endregion
     }

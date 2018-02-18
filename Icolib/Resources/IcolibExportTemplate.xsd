@@ -6,7 +6,7 @@
 	
 	<simpleType name="pattern">
 		<restriction base="string">
-			<length value="256" />
+			<maxLength value="256" />
 		</restriction>
 	</simpleType>
 

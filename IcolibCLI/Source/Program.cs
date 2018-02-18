@@ -77,6 +77,8 @@ namespace Icolib.CLI
                 }
             };
 
+            iosTemplate.Save();
+
             var androidTemplate = new ExportTemplate(Path.Combine("Templates", "android.xml")) {
                 Name = "Android",
                 OuputDirectory = "Android",
@@ -90,6 +92,8 @@ namespace Icolib.CLI
                     new ExportTemplate.Item(192, Path.Combine("drawable-xxxhdpi", "icon"))
                 }
             };
+
+            androidTemplate.Save();
         }
         #endregion
 
