@@ -9,6 +9,7 @@ namespace Icolib.CLI
         #region Constants
         private const string GENERATE_TEMPLATES = "gen_templates";
         private const string GENERATE_ICONS = "gen_icons";
+		private const string INVERT = "invert";
         private const string QUIT = "quit";
         #endregion
 
@@ -22,28 +23,32 @@ namespace Icolib.CLI
             while (true)
             {
                 Menu();
-                input = Console.ReadLine().Split(' ');
+				input = Console.ReadLine()?.Split(' ');
 
-                command = input[0].ToLowerInvariant();
+				command = input[0].ToLowerInvariant();
 
-                if (command == QUIT)
-                {
-                    break;
-                }
+				if (command == QUIT)
+				{
+					break;
+				}
 
-                switch (command)
-                {
-                    case GENERATE_TEMPLATES:
-                        GenerateDefaultTemplates();
-                        break;
+				switch (command)
+				{
+					case GENERATE_TEMPLATES:
+						GenerateDefaultTemplates();
+						break;
 
-                    case GENERATE_ICONS:
-                        GenerateIconSet(input[1], input[2]);
-                        break;
+					case GENERATE_ICONS:
+						GenerateIconSet(input[1], input[2]);
+						break;
 
-                    default:
-                        break;
-                }
+					case INVERT:
+						Invert(input[1], input[2]);
+						break;
+
+					default:
+						break;
+				}
             }
         }
         #endregion
@@ -56,7 +61,7 @@ namespace Icolib.CLI
                 Name = "iOS",
                 OuputDirectory = "iOS",
                 FallbackNamingPattern = "Icon-%w",
-                Items = new List<ExportTemplate.Item>() {
+                Items = new List<ExportTemplate.Item> {
                     new ExportTemplate.Item(20, "Icon-20"),
                     new ExportTemplate.Item(40, "Icon-20@2x"),
                     new ExportTemplate.Item(60, "Icon-20@3x"),
@@ -87,14 +92,15 @@ namespace Icolib.CLI
             var androidTemplate = new ExportTemplate(Path.Combine("Templates", "android.xml")) {
                 Name = "Android",
                 OuputDirectory = "Android",
-                FallbackNamingPattern = Path.Combine("drawable", "icon"),
-                Items = new List<ExportTemplate.Item>() {
+                FallbackNamingPattern = "drawable/icon",
+                Items = new List<ExportTemplate.Item> {
                     new ExportTemplate.Item(72),
-                    new ExportTemplate.Item(72, Path.Combine("drawable-hdpi", "icon")),
-                    new ExportTemplate.Item(48, Path.Combine("drawable-mdpi", "icon")),
-                    new ExportTemplate.Item(96, Path.Combine("drawable-xhdpi", "icon")),
-                    new ExportTemplate.Item(144, Path.Combine("drawable-xxhdpi", "icon")),
-                    new ExportTemplate.Item(192, Path.Combine("drawable-xxxhdpi", "icon"))
+                    new ExportTemplate.Item(72, "drawable-hdpi/icon"),
+                    new ExportTemplate.Item(48, "drawable-mdpi/icon"),
+                    new ExportTemplate.Item(96, "drawable-xhdpi/icon"),
+                    new ExportTemplate.Item(144, "drawable-xxhdpi/icon"),
+					new ExportTemplate.Item(192, "drawable-xxxhdpi/icon"),
+
                 }
             };
 
@@ -108,6 +114,14 @@ namespace Icolib.CLI
 
             exporter.ExportIcons(imagePath, "Output");
         }
+
+		static void Invert(string imagePath, string templateName)
+		{
+			var template = ExportTemplate.LoadFromFile(Path.Combine("Templates", $"{templateName}.xml"));
+			var exporter = new IconExporter(template);
+
+			exporter.InvertAndExportIcons(imagePath, "Output");
+		}
         #endregion
 
 

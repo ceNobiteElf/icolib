@@ -122,6 +122,7 @@ namespace Icolib
             if (item != null)
             {
                 string pattern = !string.IsNullOrWhiteSpace(item.NamingPattern) ? item.NamingPattern : FallbackNamingPattern;
+				pattern = Path.Combine(pattern.Split('/'));
 
                 return pattern.Replace("%h", item.Height.ToString()).Replace("%w", item.Width.ToString());
             }
