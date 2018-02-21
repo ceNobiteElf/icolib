@@ -9,7 +9,7 @@ namespace Icolib.CLI
         #region Constants
         private const string GENERATE_TEMPLATES = "gen_templates";
         private const string GENERATE_ICONS = "gen_icons";
-		private const string INVERT = "invert";
+        private const string INVERT = "invert";
         private const string QUIT = "quit";
         #endregion
 
@@ -23,32 +23,32 @@ namespace Icolib.CLI
             while (true)
             {
                 Menu();
-				input = Console.ReadLine()?.Split(' ');
+                input = Console.ReadLine()?.Split(' ');
 
-				command = input[0].ToLowerInvariant();
+                command = input[0].ToLowerInvariant();
 
-				if (command == QUIT)
-				{
-					break;
-				}
+                if (command == QUIT)
+                {
+                    break;
+                }
 
-				switch (command)
-				{
-					case GENERATE_TEMPLATES:
-						GenerateDefaultTemplates();
-						break;
+                switch (command)
+                {
+                    case GENERATE_TEMPLATES:
+                        GenerateDefaultTemplates();
+                        break;
 
-					case GENERATE_ICONS:
-						GenerateIconSet(input[1], input[2]);
-						break;
+                    case GENERATE_ICONS:
+                        GenerateIconSet(input[1], input[2]);
+                        break;
 
-					case INVERT:
-						Invert(input[1], input[2]);
-						break;
+                    case INVERT:
+                        Invert(input[1], input[2]);
+                        break;
 
-					default:
-						break;
-				}
+                    default:
+                        break;
+                }
             }
         }
         #endregion
@@ -99,7 +99,7 @@ namespace Icolib.CLI
                     new ExportTemplate.Item(48, "drawable-mdpi/icon"),
                     new ExportTemplate.Item(96, "drawable-xhdpi/icon"),
                     new ExportTemplate.Item(144, "drawable-xxhdpi/icon"),
-					new ExportTemplate.Item(192, "drawable-xxxhdpi/icon"),
+                    new ExportTemplate.Item(192, "drawable-xxxhdpi/icon"),
 
                 }
             };
@@ -107,21 +107,18 @@ namespace Icolib.CLI
             androidTemplate.Save();
         }
 
-        static void GenerateIconSet(string imagePath, string templateName)
+        static void GenerateIconSet(string sourcePath, string templateName)
         {
             var template = ExportTemplate.LoadFromFile(Path.Combine("Templates", $"{templateName}.xml"));
             var exporter = new IconExporter(template);
 
-            exporter.ExportIcons(imagePath, "Output");
+            exporter.ExportIcons(sourcePath, "Output");
         }
 
-		static void Invert(string imagePath, string templateName)
-		{
-			var template = ExportTemplate.LoadFromFile(Path.Combine("Templates", $"{templateName}.xml"));
-			var exporter = new IconExporter(template);
-
-			exporter.InvertAndExportIcons(imagePath, "Output");
-		}
+        static void Invert(string sourcePath, string outputPath)
+        {
+            ImageProcessor.Process(sourcePath, outputPath, ImageProcessor.Invert);
+        }
         #endregion
 
 
@@ -131,6 +128,7 @@ namespace Icolib.CLI
             Console.WriteLine("Please enter a command");
             Console.WriteLine($" {GENERATE_TEMPLATES}");
             Console.WriteLine($" {GENERATE_ICONS}");
+            Console.WriteLine($" {INVERT}");
             Console.WriteLine($" {QUIT}");
             Console.WriteLine();
         }
