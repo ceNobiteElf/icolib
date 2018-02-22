@@ -9,7 +9,10 @@ namespace Icolib.CLI
         #region Constants
         private const string GENERATE_TEMPLATES = "gen_templates";
         private const string GENERATE_ICONS = "gen_icons";
-        private const string INVERT = "invert";
+		private const string INVERT = "invert";
+		private const string INVERT2 = "invert2";
+		private const string ADJUST = "adjust";
+        private const string ADJUST2 = "adjust2";
         private const string QUIT = "quit";
         #endregion
 
@@ -45,6 +48,18 @@ namespace Icolib.CLI
                     case INVERT:
                         Invert(input[1], input[2]);
                         break;
+
+					case INVERT2:
+						Invert2(input[1], input[2]);
+						break;
+
+					case ADJUST:
+						Adjust(input[1], input[2]);
+						break;
+
+					case ADJUST2:
+						Adjust2(input[1], input[2]);
+						break;
 
                     default:
                         break;
@@ -119,6 +134,21 @@ namespace Icolib.CLI
         {
             ImageProcessor.Process(sourcePath, outputPath, ImageProcessor.Invert);
         }
+
+		static void Invert2(string sourcePath, string outputPath)
+		{
+			ImageProcessor.Process(sourcePath, outputPath, src => ImageProcessor.Invert(src, ImageProcessor.Channels.R | ImageProcessor.Channels.B));
+		}
+
+		static void Adjust(string sourcePath, string outputPath)
+		{
+			ImageProcessor.Process(sourcePath, outputPath, src => ImageProcessor.Adjust(src, 2));
+		}
+
+		static void Adjust2(string sourcePath, string outputPath)
+		{
+			ImageProcessor.Process(sourcePath, outputPath, src => ImageProcessor.Adjust(src, 0.5));
+		}
         #endregion
 
 
