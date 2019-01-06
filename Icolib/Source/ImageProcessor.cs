@@ -42,7 +42,6 @@ namespace Icolib
 			processedImage.Dispose();
 		}
 
-		//public static Bitmap Brighten()
 		public static Bitmap Adjust(Image image, double scalar)
 			=> Transform(image, c => Color.FromArgb(c.A, Clamp(scalar * c.R), Clamp(scalar * c.G), Clamp(scalar * c.B)));
 
